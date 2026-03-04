@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Transformation in the Age of Agentic Coding — R2 Data Vision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1a2233;--ink-deep:#0f1621;--paper:#f0f3f8;--paper-warm:#e8ecf4;--mist:#d4dce8;--slate:#4f6180;--slate-mid:#3a506b;--accent:#5b9bd5;--accent-dim:rgba(91,155,213,0.12);--accent-2:#7eb8e8;--panel:#1e2d42;--panel-light:#253448;--grid:rgba(91,155,213,0.06);}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:56px 56px;pointer-events:none;z-index:0}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(240,243,248,0.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--mist)}
+  .logo-mark{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;letter-spacing:.12em;color:var(--ink);line-height:1}
+  .logo-mark span{color:var(--accent)}
+  .logo-sub{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.28em;color:var(--slate);text-transform:uppercase;margin-top:2px}
+  .nav-links{display:flex;gap:40px;list-style:none}
+  .nav-links a{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate);text-decoration:none;transition:color .3s}
+  .nav-links a:hover,.nav-links a.active{color:var(--accent)}
+  .nav-back{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .3s}
+  .nav-back:hover{color:var(--ink)}
+
+  /* HERO */
+  .page-hero{padding:140px 60px 80px;position:relative;z-index:1;background:var(--panel);overflow:hidden}
+  .page-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(91,155,213,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(91,155,213,0.04) 1px,transparent 1px);background-size:56px 56px;pointer-events:none}
+  .page-hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr;gap:80px;align-items:center}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,243,248,0.35);margin-bottom:26px;display:flex;align-items:center;gap:10px}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .breadcrumb span{color:rgba(240,243,248,0.2)}
+  .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,4.5vw,4.5rem);font-weight:300;line-height:1.06;color:var(--paper);margin-bottom:24px}
+  .page-title em{font-style:italic;color:var(--accent-2)}
+  .page-subtitle{font-size:1rem;color:rgba(240,243,248,0.55);line-height:1.78;max-width:560px}
+  .author-box{background:rgba(240,243,248,0.04);border:1px solid rgba(91,155,213,0.2);padding:32px;margin-top:36px}
+  .author-role{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.25em;text-transform:uppercase;color:var(--accent-2);margin-bottom:8px}
+  .author-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--paper);margin-bottom:6px}
+  .author-bio{font-size:.82rem;color:rgba(240,243,248,0.45);line-height:1.65}
+  .hero-right{display:flex;flex-direction:column;gap:2px;margin-top:20px}
+  .stat-row{background:rgba(240,243,248,0.04);border:1px solid rgba(91,155,213,0.15);padding:20px 24px;display:flex;flex-direction:column;gap:4px}
+  .stat-big{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:300;color:var(--accent-2);line-height:1}
+  .stat-desc{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,243,248,0.35)}
+
+  /* CONTENT */
+  .content-section{padding:88px 60px;position:relative;z-index:1}
+  .content-section.alt{background:var(--paper-warm)}
+  .content-section.dark{background:var(--panel)}
+  .container{max-width:1200px;margin:0 auto}
+  .section-label{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.35em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .section-label::before{content:'';display:block;width:20px;height:1px;background:var(--accent)}
+  .section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.2vw,3rem);font-weight:300;line-height:1.1;letter-spacing:-.01em;margin-bottom:16px}
+  .section-title em{font-style:italic;color:var(--accent)}
+  .section-body{font-size:.95rem;color:var(--slate);line-height:1.82;margin-bottom:16px}
+  .content-section.dark .section-label{color:var(--accent-2)}
+  .content-section.dark .section-label::before{background:var(--accent-2)}
+  .content-section.dark .section-title{color:var(--paper)}
+  .content-section.dark .section-title em{color:var(--accent-2)}
+  .content-section.dark .section-body{color:rgba(240,243,248,0.52)}
+
+  /* OUTCOMES GRID */
+  .outcomes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:var(--mist);margin-top:36px}
+  .outcome-item{background:var(--paper);padding:32px 28px;display:flex;flex-direction:column;gap:12px;transition:background .3s}
+  .outcome-item:hover{background:var(--paper-warm)}
+  .outcome-pct{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--accent);line-height:1}
+  .outcome-title{font-weight:500;font-size:.95rem;color:var(--ink)}
+  .outcome-desc{font-size:.83rem;color:var(--slate);line-height:1.68}
+  .outcome-detail{font-size:.78rem;color:var(--slate);line-height:1.6;font-style:italic;border-left:2px solid var(--accent-dim);padding-left:12px;margin-top:4px}
+
+  /* COMPARISON */
+  .comparison{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:rgba(240,243,248,0.08);margin-top:36px}
+  .comp-col{padding:32px 28px;display:flex;flex-direction:column;gap:16px}
+  .comp-col.traditional{background:rgba(240,243,248,0.04);border-top:3px solid rgba(240,243,248,0.15)}
+  .comp-col.agentic{background:rgba(91,155,213,0.08);border-top:3px solid var(--accent)}
+  .comp-header{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(240,243,248,0.4);margin-bottom:6px}
+  .comp-col.agentic .comp-header{color:var(--accent-2)}
+  .comp-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--paper);margin-bottom:8px}
+  .comp-metric{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(240,243,248,0.07)}
+  .comp-metric-label{font-size:.82rem;color:rgba(240,243,248,0.45)}
+  .comp-metric-val{font-family:'DM Mono',monospace;font-size:.78rem;color:rgba(240,243,248,0.5)}
+  .comp-col.agentic .comp-metric-val{color:var(--accent-2)}
+
+  /* ROLES */
+  .roles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--mist);margin-top:36px}
+  .role-card{background:var(--paper);padding:30px 26px;display:flex;flex-direction:column;gap:10px;border-top:3px solid transparent;transition:all .3s}
+  .role-card:hover{border-top-color:var(--accent);background:var(--paper-warm)}
+  .role-type{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase}
+  .role-type.shrinks{color:#e07070}
+  .role-type.grows{color:#5bbd8a}
+  .role-type.new{color:var(--accent)}
+  .role-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400;color:var(--ink)}
+  .role-change{font-family:'DM Mono',monospace;font-size:.78rem;font-weight:500;margin-bottom:4px}
+  .role-change.neg{color:#e07070}
+  .role-change.pos{color:#5bbd8a}
+  .role-desc{font-size:.82rem;color:var(--slate);line-height:1.65}
+
+  /* ROADMAP */
+  .roadmap-timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;margin-top:40px}
+  .roadmap-timeline::before{content:'';position:absolute;top:32px;left:0;right:0;height:1px;background:linear-gradient(to right,var(--ink),var(--accent),var(--ink))}
+  .timeline-phase{padding:70px 24px 0;position:relative}
+  .timeline-dot{position:absolute;top:26px;left:24px;width:11px;height:11px;border:2px solid var(--accent);background:var(--paper);z-index:1}
+  .tl-label{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .tl-time{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:var(--slate);margin-bottom:10px}
+  .tl-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;margin-bottom:10px}
+  .tl-items{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .tl-items li{font-size:.8rem;color:var(--slate);line-height:1.5;display:flex;gap:7px;align-items:flex-start}
+  .tl-items li::before{content:'→';color:var(--accent);font-size:.68rem;flex-shrink:0;margin-top:1px}
+
+  /* INDUSTRIES */
+  .industry-list{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:var(--mist);margin-top:32px}
+  .industry-item{background:var(--paper);padding:28px 26px;display:flex;flex-direction:column;gap:8px;transition:background .3s}
+  .industry-item:hover{background:var(--paper-warm)}
+  .ind-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;display:flex;align-items:center;gap:10px}
+  .ind-stat{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--accent);font-weight:500}
+  .ind-desc{font-size:.82rem;color:var(--slate);line-height:1.65}
+
+  .pull-quote{background:var(--panel);padding:52px 60px;margin:52px 0;position:relative}
+  .pull-quote::before{content:'"';font-family:'Cormorant Garamond',serif;font-size:7rem;color:var(--accent);position:absolute;top:18px;left:40px;line-height:1;opacity:.3}
+  .pull-quote-text{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;font-style:italic;color:var(--paper);line-height:1.5;position:relative;z-index:1;max-width:800px}
+  .pull-quote-attr{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-2);margin-top:18px;position:relative;z-index:1}
+
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+  .reveal-delay-1{transition-delay:.1s}
+  .reveal-delay-2{transition-delay:.2s}
+  .reveal-delay-3{transition-delay:.3s}
+
+  footer{background:var(--ink-deep);padding:48px 60px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+  .footer-copy{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.14em;color:rgba(240,243,248,0.28);text-align:center}
+  .footer-copy a{color:var(--accent);text-decoration:none}
+  .footer-links{display:flex;gap:24px;list-style:none}
+  .footer-links a{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,243,248,0.28);text-decoration:none;transition:color .3s}
+  .footer-links a:hover{color:var(--accent)}
+
+  @media(max-width:900px){
+    nav{padding:16px 24px}
+    .nav-links{display:none}
+    .page-hero,.content-section{padding:100px 24px 60px}
+    .page-hero-inner{grid-template-columns:1fr;gap:40px}
+    .outcomes-grid,.comparison,.roles-grid,.roadmap-timeline,.industry-list{grid-template-columns:1fr}
+    .roadmap-timeline::before{display:none}
+    .pull-quote{padding:40px 28px}
+    footer{flex-direction:column;gap:18px;padding:32px 24px;text-align:center}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-mark">R2<span>DV</span></div>
+    <div class="logo-sub">Data Vision Inc.</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="cortex.html">Enterprise Cortex</a></li>
+    <li><a href="agentic-coding.html" class="active">Insights</a></li>
+    <li><a href="agentic-ai.html">Agentic AI</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div>
+      <div class="breadcrumb"><a href="index.html">R2DV</a><span>/</span>Insights<span>/</span>White Paper</div>
+      <h1 class="page-title">Enterprise Transformation<br>in the Age of <em>Agentic Coding</em></h1>
+      <p class="page-subtitle">A strategic framework for C-Suite and Enterprise Architecture leadership — examining how autonomous AI coding agents restructure enterprise IT economics, delivery models, and workforce operating models.</p>
+      <div class="author-box">
+        <div class="author-role">Author · Enterprise Architect</div>
+        <div class="author-name">Ravi Rali</div>
+        <div class="author-bio">TOGAF-certified architect and former Advisory Director at leading global consulting firms. 20+ years delivering large-scale digital transformation across life sciences, financial services, and Fortune 500 organizations. Expertise spans enterprise architecture, cloud application integration, AI-enabled transformation, and regulatory-aware data architectures.</div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="stat-row"><div class="stat-big">70<span style="font-size:1.4rem">%</span></div><div class="stat-desc">of enterprise transformation programs fail to deliver expected value</div></div>
+      <div class="stat-row"><div class="stat-big">85<span style="font-size:1.4rem">%</span></div><div class="stat-desc">reduction in integration development timeline with agentic systems</div></div>
+      <div class="stat-row"><div class="stat-big">5–10<span style="font-size:1.4rem">×</span></div><div class="stat-desc">velocity advantage for early agentic adopters over competitors</div></div>
+      <div class="stat-row"><div class="stat-big">30<span style="font-size:1.4rem">%</span></div><div class="stat-desc">decrease in IT total cost of ownership at AI-native maturity</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<section class="content-section" id="summary">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:80px">
+      <div>
+        <div class="section-label reveal">Executive Summary</div>
+        <h2 class="section-title reveal">The Structural <em>Crisis</em> in Enterprise Transformation</h2>
+        <p class="section-body reveal">Organizations invest $50M to $1B+ in multi-year transformation initiatives to modernize legacy systems, integrate SaaS platforms, and migrate to cloud infrastructure — yet 70% fail to deliver expected business value, run significantly over budget, or extend far beyond planned timelines.</p>
+        <p class="section-body reveal">The root cause is not poor project management. It is the fundamental mismatch between the pace of business change and the capacity constraints of human-driven software delivery. Traditional IT delivery models remain bottlenecked by manual coding, sequential testing cycles, point-in-time documentation, and architectural governance that occurs too late to prevent costly rework.</p>
+        <p class="section-body reveal">Agentic coding represents an inflection point. These are not incremental productivity improvements — they are autonomous AI agents that independently execute complex software engineering tasks: analyzing codebases across repositories, generating production-quality code with full test coverage, validating changes against architectural standards, and maintaining living documentation — all without continuous human direction.</p>
+      </div>
+      <div class="reveal" style="padding-top:56px">
+        <div style="background:var(--panel);padding:32px 28px;display:flex;flex-direction:column;gap:20px">
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-2)">Cost Accumulation — Traditional IT</div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:.82rem;color:rgba(240,243,248,0.6)">Integration Maintenance</span><span style="font-family:'DM Mono',monospace;font-size:.78rem;color:var(--accent-2)">45%</span></div>
+            <div style="background:rgba(240,243,248,0.08);height:6px;border-radius:0"><div style="background:var(--accent);height:100%;width:45%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:.82rem;color:rgba(240,243,248,0.6)">Governance & Testing</span><span style="font-family:'DM Mono',monospace;font-size:.78rem;color:var(--accent-2)">25%</span></div>
+            <div style="background:rgba(240,243,248,0.08);height:6px"><div style="background:var(--accent);height:100%;width:25%;opacity:.8"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:.82rem;color:rgba(240,243,248,0.6)">Coordination Overhead</span><span style="font-family:'DM Mono',monospace;font-size:.78rem;color:var(--accent-2)">20%</span></div>
+            <div style="background:rgba(240,243,248,0.08);height:6px"><div style="background:var(--accent);height:100%;width:20%;opacity:.7"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:.82rem;color:rgba(240,243,248,0.6)">Documentation</span><span style="font-family:'DM Mono',monospace;font-size:.78rem;color:var(--accent-2)">10%</span></div>
+            <div style="background:rgba(240,243,248,0.08);height:6px"><div style="background:var(--accent);height:100%;width:10%;opacity:.6"></div></div>
+          </div>
+          <div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,243,248,0.28);margin-top:4px">Source: R2DV Enterprise Analysis</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE OUTCOMES -->
+<section class="content-section alt" id="outcomes">
+  <div class="container">
+    <div class="section-label reveal">Measurable Value Outcomes</div>
+    <h2 class="section-title reveal">Quantifiable Impact Across the<br><em>Full Transformation Lifecycle</em></h2>
+    <div class="outcomes-grid reveal">
+      <div class="outcome-item">
+        <div class="outcome-pct">70–85%</div>
+        <div class="outcome-title">Integration Development Timeline Compression</div>
+        <div class="outcome-desc">Traditional integration development requires 4–8 weeks per medium-complexity integration. Agentic systems complete the same work in 3–7 days.</div>
+        <div class="outcome-detail">A pharmaceutical company could reduce the time to integrate a new clinical trial management system with their ERP from 6 weeks to 5 days — enabling patient enrollment 40 days earlier.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-pct">60–75%</div>
+        <div class="outcome-title">Impact Analysis Cycle Time Reduction</div>
+        <div class="outcome-desc">Manual impact analysis traditionally requires 2–4 weeks. Agentic systems perform comprehensive dependency mapping, risk assessments, and mitigation recommendations in 4–8 hours.</div>
+        <div class="outcome-detail">An investment bank could reduce analysis time for a core trading platform API modification from 3 weeks to 6 hours — identifying 47 dependent systems automatically.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-pct">80–90%</div>
+        <div class="outcome-title">Documentation Accuracy Improvement</div>
+        <div class="outcome-desc">Enterprise documentation typically becomes outdated within 3–6 months. Agentic systems maintain living documentation that updates automatically with each code commit.</div>
+        <div class="outcome-detail">A healthcare insurer deployed documentation agents maintaining real-time architectural diagrams and API specs. New engineers achieved productivity 4× faster.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-pct">50–70%</div>
+        <div class="outcome-title">Technical Debt Accumulation Rate Decrease</div>
+        <div class="outcome-desc">Agentic systems continuously identify code quality issues, security vulnerabilities, and architectural violations — autonomously remediating low-risk items.</div>
+        <div class="outcome-detail">A consumer durables manufacturer deployed continuous refactoring agents eliminating 60% of critical code quality issues within 90 days while maintaining full production stability.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-pct">65–80%</div>
+        <div class="outcome-title">Architectural Compliance Violation Reduction</div>
+        <div class="outcome-desc">Manual governance reviews occur monthly or quarterly. Agentic systems enforce architecture-as-code policies in real-time, validating every commit against security, integration, and compliance standards.</div>
+        <div class="outcome-detail">A life sciences company prevented 400+ policy violations from reaching production in year one — eliminating remediation costs estimated at $8M.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-pct">55–70%</div>
+        <div class="outcome-title">Legacy Modernization Cost Reduction</div>
+        <div class="outcome-desc">Agentic systems reduce legacy modernization costs by automating code translation, identifying refactoring opportunities, generating migration test suites, and maintaining bidirectional documentation during transition.</div>
+        <div class="outcome-detail">A CRO could reduce the cost to modernize a 1.2M line COBOL clinical system to cloud-native Java microservices from $85M to $32M — while accelerating delivery from 36 to 18 months.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PULL QUOTE -->
+<div class="pull-quote reveal">
+  <div class="pull-quote-text">Organizations that establish AI-augmented delivery capabilities today will achieve 5–10× velocity advantages over competitors still operating under legacy models. The competitive gap will be measured not in quarters but in years of accumulated capability delta.</div>
+  <div class="pull-quote-attr">Ravi Rali · Enterprise Transformation in the Age of Agentic Coding</div>
+</div>
+
+<!-- TRADITIONAL VS AGENTIC -->
+<section class="content-section dark" id="comparison">
+  <div class="container">
+    <div class="section-label reveal">The Fundamental Shift</div>
+    <h2 class="section-title reveal">Traditional vs. <em>Agentic</em> Delivery Models</h2>
+    <p class="section-body reveal">The bottleneck has shifted. In enterprise-scale environments, the constraint is no longer coordination or deployment — it is architectural reasoning: understanding dependencies, predicting change impacts, and enforcing governance. Agentic systems make architectural reasoning machine-scalable.</p>
+    <div class="comparison reveal">
+      <div class="comp-col traditional">
+        <div class="comp-header">Current State</div>
+        <div class="comp-title">Traditional Model</div>
+        <div class="comp-metric"><div class="comp-metric-label">Time Efficiency</div><div class="comp-metric-val">35%</div></div>
+        <div class="comp-metric"><div class="comp-metric-label">Policy Compliance</div><div class="comp-metric-val">55%</div></div>
+        <div class="comp-metric"><div class="comp-metric-label">Documentation Accuracy</div><div class="comp-metric-val">38%</div></div>
+        <div class="comp-metric"><div class="comp-metric-label">Testing Coverage</div><div class="comp-metric-val">42%</div></div>
+        <div class="comp-metric"><div class="comp-metric-label">Manual Effort</div><div class="comp-metric-val">85%</div></div>
+        <div style="margin-top:16px;font-size:.82rem;color:rgba(240,243,248,0.35);line-height:1.65">Agile and DevOps optimize coordination and deployment mechanics — but cannot accelerate architectural reasoning, which remains fundamentally manual.</div>
+      </div>
+      <div class="comp-col agentic">
+        <div class="comp-header">Future State</div>
+        <div class="comp-title" style="color:var(--accent-2)">Agentic Model</div>
+        <div class="comp-metric"><div class="comp-metric-label" style="color:rgba(240,243,248,0.5)">Time Efficiency</div><div class="comp-metric-val">88%</div></div>
+        <div class="comp-metric"><div class="comp-metric-label" style="color:rgba(240,243,248,0.5)">Policy Compliance</div><div class="comp-metric-val">94%</div></div>
+        <div class="comp-metric"><div class="comp-metric-label" style="color:rgba(240,243,248,0.5)">Documentation Accuracy</div><div class="comp-metric-val">96%</div></div>
+        <div class="comp-metric"><div class="comp-metric-label" style="color:rgba(240,243,248,0.5)">Testing Coverage</div><div class="comp-metric-val">92%</div></div>
+        <div class="comp-metric"><div class="comp-metric-label" style="color:rgba(240,243,248,0.5)">Manual Effort</div><div class="comp-metric-val">20%</div></div>
+        <div style="margin-top:16px;font-size:.82rem;color:rgba(240,243,248,0.4);line-height:1.65">Agentic systems collapse the separation between architecture and implementation — making governance executable, documentation living, and compliance continuous.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFORCE -->
+<section class="content-section" id="workforce">
+  <div class="container">
+    <div class="section-label reveal">Future Workforce Model</div>
+    <h2 class="section-title reveal">Roles That <em>Evolve</em>, Not Disappear</h2>
+    <p class="section-body reveal" style="max-width:640px">Agentic coding does not eliminate IT roles — it fundamentally redefines them. Roles centered on manual execution diminish. Roles requiring strategic thinking, architectural judgment, and organizational change leadership expand significantly.</p>
+    <div class="roles-grid reveal">
+      <div class="role-card"><div class="role-type shrinks">Shrinking</div><div class="role-name">Junior/Mid-Level Developers</div><div class="role-change neg">−60 to −75%</div><div class="role-desc">Traditional roles focused on implementing well-defined specifications and writing integration code diminish substantially. Agentic systems execute these tasks with higher consistency and speed.</div></div>
+      <div class="role-card"><div class="role-type shrinks">Shrinking</div><div class="role-name">Manual QA Testers</div><div class="role-change neg">−70 to −85%</div><div class="role-desc">QA roles executing test scripts and performing regression validation become largely unnecessary as agentic systems generate comprehensive test suites automatically with 85–95% coverage.</div></div>
+      <div class="role-card"><div class="role-type shrinks">Shrinking</div><div class="role-name">Integration Developers</div><div class="role-change neg">−50 to −70%</div><div class="role-desc">Specialized roles building API connectors and data transformations are heavily impacted as agentic systems implement standard integration patterns autonomously.</div></div>
+      <div class="role-card"><div class="role-type grows">Expanding</div><div class="role-name">Enterprise Architects</div><div class="role-change pos">+30 to +50% influence</div><div class="role-desc">Instead of creating documentation and conducting periodic reviews, architects define policies that agentic systems enforce automatically and provide the business context guiding autonomous decisions.</div></div>
+      <div class="role-card"><div class="role-type new">New Role</div><div class="role-name">AI Agent Supervisors</div><div class="role-change pos">1 per 8–12 agents</div><div class="role-desc">Bridges software engineering expertise with AI operations management — monitoring agent performance, reviewing agent-generated code, managing escalations, and encoding business policies into executable rules.</div></div>
+      <div class="role-card"><div class="role-type grows">Expanding</div><div class="role-name">Platform Architects</div><div class="role-change pos">+40 to +60%</div><div class="role-desc">Platform engineering becomes critical as agentic systems require robust infrastructure: automated testing environments, policy validation frameworks, code repository access, and deployment automation.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRY EXAMPLES -->
+<section class="content-section alt" id="industries">
+  <div class="container">
+    <div class="section-label reveal">Industry-Specific Adoption</div>
+    <h2 class="section-title reveal">Value Manifests <em>Differently</em> by Sector</h2>
+    <p class="section-body reveal" style="max-width:580px">Agentic coding delivers cross-industry value but addresses sector-specific constraints differently. These examples illustrate the magnitude of impact in each vertical.</p>
+    <div class="industry-list reveal">
+      <div class="industry-item"><div class="ind-name">🔬 Contract Research Organizations <span class="ind-stat">78% value realization</span></div><div class="ind-desc">Protocol change implementation time reduces from 4–8 weeks to 3–6 days. When a new trial protocol loads, agents automatically analyze data collection requirements, generate integration code, and produce audit trail documentation in 3–5 days — reducing costs 70–85%.</div></div>
+      <div class="industry-item"><div class="ind-name">🏦 Investment Banking <span class="ind-stat">72% value realization</span></div><div class="ind-desc">MiFID II transaction reporting requirement changes that would take 12–18 months compress to 3–4 months. Agentic systems analyze regulatory requirements, identify affected systems, generate compliant implementation code, and validate across integrated platforms.</div></div>
+      <div class="industry-item"><div class="ind-name">🔬 Life Sciences <span class="ind-stat">75% value realization</span></div><div class="ind-desc">Regulatory submission preparation timelines reduce from 6–12 months to 6–8 weeks. Agents continuously aggregate data across R&D, manufacturing, and commercial systems, maintaining real-time product dossiers that compile submission content automatically.</div></div>
+      <div class="industry-item"><div class="ind-name">🏥 Health Insurance <span class="ind-stat">70% value realization</span></div><div class="ind-desc">Claims processing rule change implementation reduces from 8–16 weeks to 2–3 weeks. When regulatory mandates change, agents automatically identify affected rules, generate updated logic, validate against test scenarios, and coordinate deployment.</div></div>
+      <div class="industry-item"><div class="ind-name">🏭 Consumer Durables Manufacturing <span class="ind-stat">68% value realization</span></div><div class="ind-desc">Product launch integration timelines reduce from 6–9 months to 4–6 weeks. When new products are designed, agents automatically propagate BOM data to ERP, generate manufacturing instructions for MES, create supplier workflows, and publish service documentation.</div></div>
+      <div class="industry-item"><div class="ind-name">⛽ Oil & Gas <span class="ind-stat">65% value realization</span></div><div class="ind-desc">Agents continuously analyze IoT sensor telemetry, correlate with maintenance history, predict equipment failures 30–90 days in advance, and automatically generate maintenance work orders — reducing unplanned downtime 40–60%.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="content-section" id="roadmap">
+  <div class="container">
+    <div class="section-label reveal">Transformation Roadmap</div>
+    <h2 class="section-title reveal">A Phased Path to <em>AI-Native Operations</em></h2>
+    <div class="roadmap-timeline reveal">
+      <div class="timeline-phase"><div class="timeline-dot"></div><div class="tl-label">Phase 1</div><div class="tl-time">3–6 Months</div><div class="tl-title">Visibility & Readiness</div><ul class="tl-items"><li>Deploy automated architecture discovery agents</li><li>Encode 10–15 critical policies as executable code</li><li>Run 2–3 proof-of-concept agentic integrations</li><li>Train 20–40 technical staff</li></ul></div>
+      <div class="timeline-phase"><div class="timeline-dot"></div><div class="tl-label">Phase 2</div><div class="tl-time">6–12 Months</div><div class="tl-title">Assisted Execution</div><ul class="tl-items"><li>Scale to production — 60–80% of standard patterns</li><li>Achieve 85–95% automated test coverage</li><li>Deploy living documentation system</li><li>Continuous impact analysis in hours, not weeks</li></ul></div>
+      <div class="timeline-phase"><div class="timeline-dot"></div><div class="tl-label">Phase 3</div><div class="tl-time">12–18 Months</div><div class="tl-title">Autonomous Governance</div><ul class="tl-items"><li>100–150 architectural standards in policy-as-code</li><li>Autonomous technical debt remediation</li><li>Predictive architecture and effort forecasting</li><li>Real-time regulatory compliance evidence</li></ul></div>
+      <div class="timeline-phase"><div class="timeline-dot"></div><div class="tl-label">Phase 4</div><div class="tl-time">18–36 Months</div><div class="tl-title">AI-Native Operations</div><ul class="tl-items"><li>Self-optimizing architecture from production telemetry</li><li>Autonomous environment management</li><li>Perpetual modernization capability</li><li>3–5× faster than competitors on strategic initiatives</li></ul></div>
+    </div>
+    <div style="margin-top:56px;display:flex;gap:20px;align-items:center;flex-wrap:wrap" class="reveal">
+      <a href="agentic-ai.html" style="display:inline-flex;align-items:center;gap:10px;padding:14px 36px;background:var(--panel);color:var(--paper);font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:background .3s" onmouseover="this.style.background='var(--accent)'" onmouseout="this.style.background='var(--panel)'">
+        Explore Agentic AI Services →
+      </a>
+      <a href="index.html#contact" style="font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate);text-decoration:none;transition:color .3s" onmouseover="this.style.color='var(--ink)'" onmouseout="this.style.color='var(--slate)'">
+        Schedule a Strategy Session →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">
+    <div class="logo-mark" style="color:var(--paper)">R2<span>DV</span></div>
+    <div class="logo-sub">Data Vision Inc.</div>
+  </div>
+  <div class="footer-copy">© 2025 R2 Data Vision Inc. · <a href="https://www.r2dv.com">www.r2dv.com</a> · <a href="mailto:contact@r2dv.com">contact@r2dv.com</a></div>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="cortex.html">Cortex</a></li>
+    <li><a href="agentic-ai.html">Agentic AI</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+  const obs=new IntersectionObserver(e=>e.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}}),{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+</script>
+</body>
+</html>

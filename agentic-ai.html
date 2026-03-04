@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic AI Services — R2 Data Vision Inc.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1a2233;--ink-deep:#0f1621;--paper:#f0f3f8;--paper-warm:#e8ecf4;--mist:#d4dce8;--slate:#4f6180;--slate-mid:#3a506b;--accent:#5b9bd5;--accent-dim:rgba(91,155,213,0.12);--accent-2:#7eb8e8;--panel:#1e2d42;--panel-light:#253448;--grid:rgba(91,155,213,0.06);}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:56px 56px;pointer-events:none;z-index:0}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(240,243,248,0.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--mist)}
+  .logo-mark{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;letter-spacing:.12em;color:var(--ink);line-height:1}
+  .logo-mark span{color:var(--accent)}
+  .logo-sub{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.28em;color:var(--slate);text-transform:uppercase;margin-top:2px}
+  .nav-links{display:flex;gap:40px;list-style:none}
+  .nav-links a{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate);text-decoration:none;transition:color .3s}
+  .nav-links a:hover,.nav-links a.active{color:var(--accent)}
+  .nav-back{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--slate);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .3s}
+  .nav-back:hover{color:var(--ink)}
+
+  .page-hero{padding:140px 60px 88px;background:var(--panel);position:relative;z-index:1;overflow:hidden}
+  .page-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(91,155,213,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(91,155,213,0.04) 1px,transparent 1px);background-size:56px 56px;pointer-events:none}
+  .page-hero-inner{max-width:1200px;margin:0 auto}
+  .breadcrumb{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,243,248,0.35);margin-bottom:26px;display:flex;align-items:center;gap:10px}
+  .breadcrumb a{color:var(--accent);text-decoration:none}
+  .breadcrumb span{color:rgba(240,243,248,0.2)}
+  .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,5vw,4.8rem);font-weight:300;line-height:1.06;color:var(--paper);margin-bottom:24px}
+  .page-title em{font-style:italic;color:var(--accent-2)}
+  .page-subtitle{font-size:1rem;color:rgba(240,243,248,0.55);line-height:1.78;max-width:600px;margin-bottom:44px}
+  .service-tabs{display:flex;gap:2px;flex-wrap:wrap}
+  .service-tab{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;padding:10px 18px;background:rgba(240,243,248,0.05);border:1px solid rgba(91,155,213,0.2);color:rgba(126,184,232,0.7);text-decoration:none;transition:all .3s}
+  .service-tab:hover,.service-tab.active{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+
+  .content-section{padding:88px 60px;position:relative;z-index:1}
+  .content-section.alt{background:var(--paper-warm)}
+  .content-section.dark{background:var(--panel)}
+  .container{max-width:1200px;margin:0 auto}
+  .section-label{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.35em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .section-label::before{content:'';display:block;width:20px;height:1px;background:var(--accent)}
+  .section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.5vw,3.2rem);font-weight:300;line-height:1.1;letter-spacing:-.01em;margin-bottom:16px}
+  .section-title em{font-style:italic;color:var(--accent)}
+  .section-body{font-size:.95rem;color:var(--slate);line-height:1.82;margin-bottom:16px}
+  .content-section.dark .section-label{color:var(--accent-2)}
+  .content-section.dark .section-label::before{background:var(--accent-2)}
+  .content-section.dark .section-title{color:var(--paper)}
+  .content-section.dark .section-title em{color:var(--accent-2)}
+  .content-section.dark .section-body{color:rgba(240,243,248,0.52)}
+
+  /* CAPABILITY CARDS */
+  .cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--mist);margin-top:40px}
+  .cap-card{background:var(--paper);padding:38px 30px;display:flex;flex-direction:column;gap:14px;border-bottom:3px solid transparent;transition:all .3s}
+  .cap-card:hover{background:var(--paper-warm);border-bottom-color:var(--accent)}
+  .cap-num{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.25em;color:var(--accent);text-transform:uppercase}
+  .cap-icon{width:42px;height:42px;border:1px solid var(--mist);display:flex;align-items:center;justify-content:center}
+  .cap-icon svg{width:19px;height:19px;stroke:var(--accent);fill:none;stroke-width:1.5}
+  .cap-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;line-height:1.2}
+  .cap-desc{font-size:.83rem;color:var(--slate);line-height:1.7;flex:1}
+  .cap-tags{display:flex;flex-wrap:wrap;gap:6px}
+  .tag{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 8px;background:var(--accent-dim);color:var(--slate-mid);border:1px solid rgba(91,155,213,0.2)}
+
+  /* ORCHESTRATION */
+  .orch-diagram{background:var(--panel-light);padding:44px;margin-top:36px;position:relative;z-index:1}
+  .orch-center{background:linear-gradient(135deg,var(--accent) 0%,#2260a0 100%);padding:24px 32px;text-align:center;display:inline-block;position:relative}
+  .orch-wrapper{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;padding:24px 0}
+  .orch-satellite{background:rgba(240,243,248,0.05);border:1px solid rgba(91,155,213,0.2);padding:16px 18px;min-width:140px;text-align:center}
+  .orch-sat-title{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent-2);margin-bottom:4px}
+  .orch-sat-desc{font-size:.75rem;color:rgba(240,243,248,0.38);line-height:1.5}
+  .orch-connector{width:36px;height:1px;background:rgba(91,155,213,0.3);flex-shrink:0}
+  .orch-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;color:var(--paper);letter-spacing:.08em}
+
+  /* DIFF TABLE */
+  .diff-table{width:100%;border-collapse:collapse;margin-top:32px}
+  .diff-table th{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;padding:12px 18px;text-align:left;border-bottom:2px solid var(--mist);background:var(--paper-warm);color:var(--slate)}
+  .diff-table td{padding:13px 18px;border-bottom:1px solid var(--mist);font-size:.84rem;color:var(--slate);vertical-align:top;line-height:1.55}
+  .diff-table td:first-child{color:var(--ink);font-weight:400;white-space:nowrap}
+  .diff-table .agentic-col{color:var(--accent) !important;font-weight:400}
+  .diff-table tr:hover td{background:var(--paper-warm)}
+
+  /* LIFECYCLE */
+  .lifecycle{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:rgba(240,243,248,0.06);margin-top:36px}
+  .lifecycle-item{background:rgba(240,243,248,0.03);border:1px solid rgba(91,155,213,0.12);padding:28px 26px;transition:background .3s}
+  .lifecycle-item:hover{background:rgba(91,155,213,0.06)}
+  .lc-step{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-2);margin-bottom:8px}
+  .lc-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--paper);margin-bottom:8px}
+  .lc-desc{font-size:.82rem;color:rgba(240,243,248,0.45);line-height:1.65}
+
+  /* ENGAGE */
+  .engage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--mist);margin-top:36px}
+  .engage-item{background:var(--paper);padding:32px 28px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:background .3s;border-bottom:2px solid transparent}
+  .engage-item:hover{background:var(--paper-warm);border-bottom-color:var(--accent)}
+  .engage-type{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent)}
+  .engage-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--ink)}
+  .engage-desc{font-size:.82rem;color:var(--slate);line-height:1.65;flex:1}
+  .engage-cta{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:6px;transition:gap .3s}
+  .engage-item:hover .engage-cta{gap:10px}
+
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+  .reveal-delay-1{transition-delay:.1s}
+  .reveal-delay-2{transition-delay:.2s}
+  .reveal-delay-3{transition-delay:.3s}
+
+  footer{background:var(--ink-deep);padding:48px 60px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+  .footer-copy{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.14em;color:rgba(240,243,248,0.28);text-align:center}
+  .footer-copy a{color:var(--accent);text-decoration:none}
+  .footer-links{display:flex;gap:24px;list-style:none}
+  .footer-links a{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,243,248,0.28);text-decoration:none;transition:color .3s}
+  .footer-links a:hover{color:var(--accent)}
+
+  @media(max-width:900px){
+    nav{padding:16px 24px}
+    .nav-links{display:none}
+    .page-hero,.content-section{padding:100px 24px 60px}
+    .cap-grid,.engage-grid,.lifecycle{grid-template-columns:1fr}
+    footer{flex-direction:column;gap:18px;padding:32px 24px;text-align:center}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-mark">R2<span>DV</span></div>
+    <div class="logo-sub">Data Vision Inc.</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="cortex.html">Enterprise Cortex</a></li>
+    <li><a href="agentic-coding.html">Insights</a></li>
+    <li><a href="agentic-ai.html" class="active">Agentic AI</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">R2DV</a><span>/</span>Services<span>/</span>Agentic AI</div>
+    <h1 class="page-title">Agentic AI &<br><em>Orchestration</em> Services</h1>
+    <p class="page-subtitle">Design and deploy enterprise-grade autonomous AI systems — from single-agent implementations to complex multi-agent orchestration ecosystems — with rigorous governance, security controls, and human-in-the-loop oversight built in from day one.</p>
+    <div class="service-tabs">
+      <a href="#implementations" class="service-tab active">Agentic Implementations</a>
+      <a href="#orchestration" class="service-tab">Multi-Agent Orchestration</a>
+      <a href="#difference" class="service-tab">Agents vs. Assistants</a>
+      <a href="#lifecycle" class="service-tab">Delivery Lifecycle</a>
+      <a href="#engage" class="service-tab">How to Engage</a>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT WE BUILD -->
+<section class="content-section" id="implementations">
+  <div class="container">
+    <div class="section-label reveal">What We Build</div>
+    <h2 class="section-title reveal">Enterprise-Grade <em>Agentic</em> Systems</h2>
+    <p class="section-body reveal" style="max-width:620px">Agentic systems are autonomous AI entities that operate persistently across workflows — receiving high-level objectives, independently developing plans, executing tasks, validating results, and escalating edge cases requiring human judgment.</p>
+    <div class="cap-grid">
+      <div class="cap-card reveal">
+        <div class="cap-num">01</div>
+        <div class="cap-icon"><svg viewBox="0 0 24 24"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+        <div class="cap-title">Autonomous Task Execution Agents</div>
+        <div class="cap-desc">Receive high-level business objectives and independently develop implementation plans, execute code, create tests, and validate results — without step-by-step human direction. Capable of multi-hour autonomous execution cycles.</div>
+        <div class="cap-tags"><span class="tag">ReAct Framework</span><span class="tag">Tool Use</span><span class="tag">Plan & Execute</span></div>
+      </div>
+      <div class="cap-card reveal reveal-delay-1">
+        <div class="cap-num">02</div>
+        <div class="cap-icon"><svg viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg></div>
+        <div class="cap-title">Enterprise Data & Integration Agents</div>
+        <div class="cap-desc">Agents that understand your enterprise data landscape — schemas, APIs, data lineage, and integration patterns — to autonomously implement integrations, perform impact analysis, and maintain data quality across complex environments.</div>
+        <div class="cap-tags"><span class="tag">Data Agents</span><span class="tag">Impact Analysis</span><span class="tag">API Agents</span></div>
+      </div>
+      <div class="cap-card reveal reveal-delay-2">
+        <div class="cap-num">03</div>
+        <div class="cap-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="cap-title">Compliance & Governance Agents</div>
+        <div class="cap-desc">Continuously validate code commits, configurations, and architectural decisions against organizational policies — security requirements, integration standards, data governance rules, and regulatory mandates (HIPAA, GxP, SOX) — in real-time.</div>
+        <div class="cap-tags"><span class="tag">Policy-as-Code</span><span class="tag">Continuous Validation</span><span class="tag">Regulatory</span></div>
+      </div>
+      <div class="cap-card reveal">
+        <div class="cap-num">04</div>
+        <div class="cap-icon"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+        <div class="cap-title">Intelligent Testing Agents</div>
+        <div class="cap-desc">Generate comprehensive test suites with 85–95% code coverage, execute automated regression testing across all affected systems, validate integration contracts, and identify edge cases — all before any deployment to production.</div>
+        <div class="cap-tags"><span class="tag">Test Generation</span><span class="tag">Contract Testing</span><span class="tag">Regression</span></div>
+      </div>
+      <div class="cap-card reveal reveal-delay-1">
+        <div class="cap-num">05</div>
+        <div class="cap-icon"><svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg></div>
+        <div class="cap-title">Documentation & Knowledge Agents</div>
+        <div class="cap-desc">Generate and maintain living technical documentation as a natural byproduct of code analysis — extracting API specifications from implementation code, building data lineage diagrams, and creating deployment guides from infrastructure-as-code.</div>
+        <div class="cap-tags"><span class="tag">Living Docs</span><span class="tag">API Specs</span><span class="tag">Data Lineage</span></div>
+      </div>
+      <div class="cap-card reveal reveal-delay-2">
+        <div class="cap-num">06</div>
+        <div class="cap-icon"><svg viewBox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg></div>
+        <div class="cap-title">Cloud Operations Agents</div>
+        <div class="cap-desc">Autonomously provision infrastructure, manage environment configurations, orchestrate deployments, monitor production telemetry, identify performance bottlenecks, and propose architectural optimizations — keeping systems self-maintaining.</div>
+        <div class="cap-tags"><span class="tag">FinOps</span><span class="tag">Infrastructure</span><span class="tag">Self-Healing</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORCHESTRATION -->
+<section class="content-section dark" id="orchestration">
+  <div class="container">
+    <div class="section-label reveal">Multi-Agent Architecture</div>
+    <h2 class="section-title reveal">AI Agentic <em>Orchestration</em></h2>
+    <p class="section-body reveal" style="max-width:620px">The most powerful enterprise AI deployments are not single agents — they are ecosystems where specialized agents collaborate, delegate tasks, and self-coordinate to solve problems that span your entire enterprise value chain.</p>
+    <div class="orch-diagram reveal">
+      <div style="text-align:center;margin-bottom:32px">
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-2);margin-bottom:16px">R2DV Multi-Agent Orchestration Pattern</div>
+        <div style="display:inline-block;background:linear-gradient(135deg,var(--accent) 0%,#2260a0 100%);padding:20px 36px;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:var(--paper)">Orchestrator Agent</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,243,248,0.5);margin-top:4px">Decomposes · Assigns · Aggregates</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:rgba(91,155,213,0.08)">
+        <div class="orch-satellite"><div class="orch-sat-title">Impact Agent</div><div class="orch-sat-desc">Dependency mapping, risk assessment, change blast radius analysis</div></div>
+        <div class="orch-satellite"><div class="orch-sat-title">Code Gen Agent</div><div class="orch-sat-desc">Pattern-aware implementation, error handling, deployment configs</div></div>
+        <div class="orch-satellite"><div class="orch-sat-title">Testing Agent</div><div class="orch-sat-desc">Test suite generation, contract validation, regression execution</div></div>
+        <div class="orch-satellite"><div class="orch-sat-title">Validation Agent</div><div class="orch-sat-desc">Policy compliance, security scanning, quality gates enforcement</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(91,155,213,0.05);margin-top:2px">
+        <div class="orch-satellite"><div class="orch-sat-title">Documentation Agent</div><div class="orch-sat-desc">Auto-generated living docs, API specs, data lineage</div></div>
+        <div class="orch-satellite"><div class="orch-sat-title">Deployment Agent</div><div class="orch-sat-desc">Environment management, staged rollouts, rollback procedures</div></div>
+        <div class="orch-satellite"><div class="orch-sat-title">Monitor Agent</div><div class="orch-sat-desc">Production telemetry, anomaly detection, performance optimization</div></div>
+      </div>
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(91,155,213,0.15);display:flex;gap:32px;flex-wrap:wrap">
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,243,248,0.25)">Communication: Azure Service Bus · Async Messaging</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,243,248,0.25)">State: Azure Durable Functions · Retry Logic</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,243,248,0.25)">Audit: Azure Monitor · Full Correlation IDs</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENTS VS ASSISTANTS -->
+<section class="content-section alt" id="difference">
+  <div class="container">
+    <div class="section-label reveal">Understanding the Distinction</div>
+    <h2 class="section-title reveal">Agentic Systems vs.<br><em>Code Assistants</em></h2>
+    <p class="section-body reveal">GitHub Copilot, Amazon CodeWhisperer, and similar tools provide valuable productivity improvements for individual developers. Agentic systems operate in a fundamentally different category — scope, initiative, context awareness, and accountability are categorically different.</p>
+    <table class="diff-table reveal">
+      <thead><tr><th>Dimension</th><th>Code Assistants (Copilot etc.)</th><th class="agentic-col">Agentic Systems (R2DV)</th></tr></thead>
+      <tbody>
+        <tr><td>Scope</td><td>Single functions or code blocks suggested within narrow context window</td><td class="agentic-col">Complete features spanning multiple files, repositories, and systems</td></tr>
+        <tr><td>Initiative</td><td>Responds to developer prompts; developer reviews and accepts suggestions</td><td class="agentic-col">Operates autonomously from high-level business objectives</td></tr>
+        <tr><td>Context Awareness</td><td>Current file and nearby context only</td><td class="agentic-col">Full codebase awareness, dependency graph, organizational standards</td></tr>
+        <tr><td>Quality Assurance</td><td>Developer reviews generated code manually</td><td class="agentic-col">Automated testing, policy validation, security scanning before commit</td></tr>
+        <tr><td>Documentation</td><td>Not included; developer must document separately</td><td class="agentic-col">Generated automatically as byproduct of code analysis</td></tr>
+        <tr><td>Enterprise Context</td><td>Generic — no knowledge of your specific systems</td><td class="agentic-col">Grounded in your Enterprise Knowledge Base — organization-specific</td></tr>
+        <tr><td>Governance</td><td>None — developer responsible for all compliance checks</td><td class="agentic-col">Policy-as-code enforcement at every commit, continuous compliance</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- LIFECYCLE -->
+<section class="content-section dark" id="lifecycle">
+  <div class="container">
+    <div class="section-label reveal">R2DV Delivery Lifecycle</div>
+    <h2 class="section-title reveal">How We <em>Implement</em> Agentic Systems</h2>
+    <p class="section-body reveal" style="max-width:580px">Every agentic implementation follows our proven eight-step lifecycle — ensuring enterprise-grade reliability, security, and governance are built in from discovery through continuous operations.</p>
+    <div class="lifecycle reveal">
+      <div class="lifecycle-item"><div class="lc-step">Step 01</div><div class="lc-title">Use Case Discovery & Prioritization</div><div class="lc-desc">Identify and prioritize automation opportunities based on business impact, implementation complexity, and organizational readiness. Define success criteria and ROI expectations upfront.</div></div>
+      <div class="lifecycle-item"><div class="lc-step">Step 02</div><div class="lc-title">Agent Architecture Design</div><div class="lc-desc">Design the agent topology — single agent or multi-agent orchestration, communication patterns, state management, escalation criteria, and human oversight touchpoints.</div></div>
+      <div class="lifecycle-item"><div class="lc-step">Step 03</div><div class="lc-title">Knowledge Base & Context Setup</div><div class="lc-desc">Establish the enterprise knowledge context the agent needs — metadata harvesting, policy-as-code library initialization, and organizational standards encoding.</div></div>
+      <div class="lifecycle-item"><div class="lc-step">Step 04</div><div class="lc-title">Security & Governance Framework</div><div class="lc-desc">Define data boundary controls, RBAC, audit logging requirements, and regulatory compliance mappings before any agent development begins.</div></div>
+      <div class="lifecycle-item"><div class="lc-step">Step 05</div><div class="lc-title">Proof of Concept Validation</div><div class="lc-desc">Build and validate a narrow proof-of-concept on 2–3 representative tasks. Measure actual performance against defined success criteria before scaling.</div></div>
+      <div class="lifecycle-item"><div class="lc-step">Step 06</div><div class="lc-title">Production Build & Integration</div><div class="lc-desc">Full agent implementation with enterprise integrations, comprehensive error handling, retry logic, monitoring instrumentation, and supervisory console deployment.</div></div>
+      <div class="lifecycle-item"><div class="lc-step">Step 07</div><div class="lc-title">Supervisor Training & Handover</div><div class="lc-desc">Train designated AI Agent Supervisors on performance monitoring, policy refinement, escalation handling, and continuous improvement workflows.</div></div>
+      <div class="lifecycle-item"><div class="lc-step">Step 08</div><div class="lc-title">Continuous Optimization</div><div class="lc-desc">Ongoing performance monitoring, knowledge base enrichment, policy library expansion, and agent capability evolution as organizational needs grow.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ENGAGE -->
+<section class="content-section" id="engage">
+  <div class="container">
+    <div class="section-label reveal">How to Engage</div>
+    <h2 class="section-title reveal">Three Ways to <em>Start</em></h2>
+    <p class="section-body reveal" style="max-width:540px">Whether you're exploring possibilities, ready to build, or seeking an ongoing partner — R2DV has an engagement model designed for where you are today.</p>
+    <div class="engage-grid reveal">
+      <a href="index.html#contact" class="engage-item">
+        <div class="engage-type">Rapid Engagement</div>
+        <div class="engage-title">Agentic AI Readiness Assessment</div>
+        <div class="engage-desc">A focused 2–3 week engagement that evaluates your organization's AI readiness, identifies high-value automation opportunities, maps your data and system landscape, and delivers a prioritized agentic roadmap with ROI estimates.</div>
+        <div class="engage-cta">Request Assessment →</div>
+      </a>
+      <a href="index.html#contact" class="engage-item">
+        <div class="engage-type">Build Engagement</div>
+        <div class="engage-title">Proof of Concept & Production Build</div>
+        <div class="engage-desc">End-to-end implementation of your first agentic system — from architecture design and PoC validation through production deployment, supervisor training, and governance framework establishment. Typically 8–16 weeks.</div>
+        <div class="engage-cta">Start a Project →</div>
+      </a>
+      <a href="index.html#contact" class="engage-item">
+        <div class="engage-type">Strategic Partnership</div>
+        <div class="engage-title">Ongoing Agentic AI Partnership</div>
+        <div class="engage-desc">A long-term partnership embedding R2DV practitioners within your organization — continuously expanding your agentic ecosystem, optimizing performance, and evolving your AI operating model toward full AI-native operations.</div>
+        <div class="engage-cta">Explore Partnership →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">
+    <div class="logo-mark" style="color:var(--paper)">R2<span>DV</span></div>
+    <div class="logo-sub">Data Vision Inc.</div>
+  </div>
+  <div class="footer-copy">© 2025 R2 Data Vision Inc. · <a href="https://www.r2dv.com">www.r2dv.com</a> · <a href="mailto:contact@r2dv.com">contact@r2dv.com</a></div>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="cortex.html">Cortex</a></li>
+    <li><a href="agentic-coding.html">White Paper</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+  const obs=new IntersectionObserver(e=>e.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}}),{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+</script>
+</body>
+</html>

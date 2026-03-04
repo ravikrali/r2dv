@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R2 Data Vision Inc. — Intelligent Enterprise Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:        #1a2233;
+    --ink-deep:   #0f1621;
+    --paper:      #f0f3f8;
+    --paper-warm: #e8ecf4;
+    --mist:       #d4dce8;
+    --slate:      #4f6180;
+    --slate-mid:  #3a506b;
+    --accent:     #5b9bd5;
+    --accent-dim: rgba(91,155,213,0.12);
+    --accent-2:   #7eb8e8;
+    --panel:      #1e2d42;
+    --panel-light:#253448;
+    --grid:       rgba(91,155,213,0.06);
+    --border:     rgba(91,155,213,0.18);
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--paper); color:var(--ink); font-family:'Outfit',sans-serif; font-weight:300; overflow-x:hidden; }
+
+  /* CURSOR */
+  .cursor { position:fixed; width:8px; height:8px; background:var(--accent); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .3s,height .3s; }
+  .cursor-ring { position:fixed; width:34px; height:34px; border:1px solid var(--accent); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:left .12s ease-out,top .12s ease-out,width .3s,height .3s; opacity:.45; }
+
+  /* GRID BG */
+  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px); background-size:56px 56px; pointer-events:none; z-index:0; }
+
+  /* NAV */
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:24px 60px; display:flex; align-items:center; justify-content:space-between; background:rgba(240,243,248,0.88); backdrop-filter:blur(14px); border-bottom:1px solid var(--mist); transition:padding .4s; }
+  nav.scrolled { padding:16px 60px; }
+  .logo-mark { font-family:'Cormorant Garamond',serif; font-size:1.55rem; font-weight:300; letter-spacing:.12em; color:var(--ink); line-height:1; }
+  .logo-mark span { color:var(--accent); }
+  .logo-sub { font-family:'DM Mono',monospace; font-size:.52rem; letter-spacing:.28em; color:var(--slate); text-transform:uppercase; margin-top:2px; }
+  .nav-links { display:flex; gap:44px; list-style:none; }
+  .nav-links a { font-family:'DM Mono',monospace; font-size:.68rem; letter-spacing:.18em; text-transform:uppercase; color:var(--slate); text-decoration:none; position:relative; transition:color .3s; }
+  .nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:1px; background:var(--accent); transition:width .3s; }
+  .nav-links a:hover { color:var(--ink); }
+  .nav-links a:hover::after { width:100%; }
+  .nav-cta { font-family:'DM Mono',monospace; font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; padding:11px 26px; border:1px solid var(--ink); color:var(--ink); background:transparent; text-decoration:none; transition:all .3s; }
+  .nav-cta:hover { background:var(--ink); color:var(--paper); }
+
+  /* HERO */
+  #hero { min-height:100vh; display:flex; align-items:center; padding:130px 60px 80px; position:relative; z-index:1; }
+  .hero-inner { max-width:1200px; margin:0 auto; width:100%; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+  .hero-eyebrow { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.3em; text-transform:uppercase; color:var(--accent); margin-bottom:26px; display:flex; align-items:center; gap:14px; opacity:0; animation:fadeUp .8s .3s forwards; }
+  .hero-eyebrow::before { content:''; display:block; width:28px; height:1px; background:var(--accent); }
+  .hero-title { font-family:'Cormorant Garamond',serif; font-size:clamp(3rem,5.2vw,5.2rem); font-weight:300; line-height:1.06; letter-spacing:-.01em; margin-bottom:30px; opacity:0; animation:fadeUp .8s .5s forwards; }
+  .hero-title em { font-style:italic; color:var(--accent); }
+  .hero-body { font-size:1.02rem; font-weight:300; color:var(--slate); line-height:1.78; max-width:460px; margin-bottom:48px; opacity:0; animation:fadeUp .8s .7s forwards; }
+  .hero-actions { display:flex; gap:22px; align-items:center; opacity:0; animation:fadeUp .8s .9s forwards; }
+  .btn-primary { display:inline-flex; align-items:center; gap:10px; padding:15px 38px; background:var(--panel); color:var(--paper); font-family:'DM Mono',monospace; font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; text-decoration:none; transition:all .35s; position:relative; overflow:hidden; }
+  .btn-primary::before { content:''; position:absolute; inset:0; background:var(--accent); transform:translateX(-101%); transition:transform .35s; z-index:0; }
+  .btn-primary:hover::before { transform:translateX(0); }
+  .btn-primary span { position:relative; z-index:1; }
+  .btn-ghost { font-family:'DM Mono',monospace; font-size:.68rem; letter-spacing:.18em; text-transform:uppercase; color:var(--slate); text-decoration:none; display:flex; align-items:center; gap:8px; transition:color .3s,gap .3s; }
+  .btn-ghost:hover { color:var(--ink); gap:14px; }
+
+  /* Hero visual */
+  .hero-visual { position:relative; height:460px; opacity:0; animation:fadeIn 1.2s 1s forwards; }
+  .hex-container { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .hex-inner { position:relative; width:340px; height:340px; }
+  .hex-ring { position:absolute; border-radius:50%; border:1px solid rgba(91,155,213,0.15); top:50%; left:50%; transform:translate(-50%,-50%); animation:rotate 20s linear infinite; }
+  .hex-ring:nth-child(1) { width:90px; height:90px; border-color:rgba(91,155,213,0.5); animation-duration:8s; }
+  .hex-ring:nth-child(2) { width:180px; height:180px; border-color:rgba(91,155,213,0.25); animation-duration:14s; animation-direction:reverse; }
+  .hex-ring:nth-child(3) { width:270px; height:270px; border-color:rgba(91,155,213,0.12); animation-duration:22s; }
+  .hex-ring:nth-child(4) { width:340px; height:340px; border-color:rgba(91,155,213,0.08); animation-duration:32s; animation-direction:reverse; }
+  .hex-dot { position:absolute; width:6px; height:6px; background:var(--accent); border-radius:50%; top:-3px; left:50%; transform:translateX(-50%); }
+  .hex-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; }
+  .hex-center-mark { font-family:'Cormorant Garamond',serif; font-size:2.6rem; font-weight:300; color:var(--ink); line-height:1; }
+  .hex-center-mark span { color:var(--accent); }
+  .hex-center-sub { font-family:'DM Mono',monospace; font-size:.52rem; letter-spacing:.3em; color:var(--slate); text-transform:uppercase; margin-top:4px; }
+  .data-nodes { position:absolute; inset:0; }
+  .node { position:absolute; display:flex; align-items:center; gap:9px; animation:pulse 3s ease-in-out infinite; }
+  .node-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); flex-shrink:0; box-shadow:0 0 10px var(--accent); }
+  .node-label { font-family:'DM Mono',monospace; font-size:.57rem; letter-spacing:.14em; color:var(--slate); text-transform:uppercase; white-space:nowrap; }
+  .node:nth-child(1){top:6%;left:54%;animation-delay:0s}
+  .node:nth-child(2){top:20%;right:0;animation-delay:.5s}
+  .node:nth-child(3){top:44%;right:-6%;animation-delay:1s}
+  .node:nth-child(4){bottom:20%;right:0;animation-delay:1.5s}
+  .node:nth-child(5){bottom:6%;left:54%;animation-delay:2s}
+  .node:nth-child(6){bottom:20%;left:-2%;animation-delay:2.5s}
+  .node:nth-child(7){top:44%;left:-10%;animation-delay:1.2s}
+  .node:nth-child(8){top:20%;left:2%;animation-delay:.8s}
+
+  /* SECTION COMMONS */
+  section { position:relative; z-index:1; }
+  .container { max-width:1200px; margin:0 auto; }
+  .section-label { font-family:'DM Mono',monospace; font-size:.58rem; letter-spacing:.35em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; display:flex; align-items:center; gap:12px; }
+  .section-label::before { content:''; display:block; width:22px; height:1px; background:var(--accent); }
+  .section-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2.2rem,3.8vw,3.6rem); font-weight:300; line-height:1.1; letter-spacing:-.01em; margin-bottom:18px; }
+  .section-title em { font-style:italic; color:var(--accent); }
+  .section-body { font-size:.98rem; color:var(--slate); line-height:1.8; }
+
+  /* STATS BAR */
+  .stats-bar { background:var(--panel); padding:48px 60px; display:grid; grid-template-columns:repeat(4,1fr); position:relative; z-index:1; }
+  .stat-item { padding:0 44px; border-right:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:5px; }
+  .stat-item:first-child { padding-left:0; }
+  .stat-item:last-child { border-right:none; }
+  .stat-num { font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:300; color:var(--paper); line-height:1; }
+  .stat-num span { color:var(--accent); }
+  .stat-label { font-family:'DM Mono',monospace; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(240,243,248,0.4); }
+
+  /* SERVICES */
+  #services { padding:110px 60px; }
+  .services-header { display:grid; grid-template-columns:1fr 1fr; gap:80px; margin-bottom:72px; align-items:end; }
+  .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--mist); }
+  .service-card { background:var(--paper); padding:44px 36px; display:flex; flex-direction:column; gap:18px; transition:background .3s; cursor:pointer; position:relative; overflow:hidden; text-decoration:none; color:inherit; }
+  .service-card::before { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .4s; }
+  .service-card:hover { background:var(--paper-warm); }
+  .service-card:hover::before { transform:scaleX(1); }
+  .service-icon { width:42px; height:42px; border:1px solid var(--mist); display:flex; align-items:center; justify-content:center; }
+  .service-icon svg { width:19px; height:19px; stroke:var(--accent); fill:none; stroke-width:1.5; }
+  .service-num { font-family:'DM Mono',monospace; font-size:.52rem; letter-spacing:.25em; color:var(--accent); text-transform:uppercase; }
+  .service-name { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:400; line-height:1.2; }
+  .service-desc { font-size:.87rem; color:var(--slate); line-height:1.75; flex:1; }
+  .service-tags { display:flex; flex-wrap:wrap; gap:7px; }
+  .tag { font-family:'DM Mono',monospace; font-size:.52rem; letter-spacing:.14em; text-transform:uppercase; padding:4px 9px; background:var(--accent-dim); color:var(--slate-mid); border:1px solid rgba(91,155,213,0.25); }
+  .service-link { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:6px; transition:gap .3s; }
+  .service-card:hover .service-link { gap:10px; }
+
+  /* ENTERPRISE CORTEX */
+  #cortex { padding:110px 60px; background:var(--panel); color:var(--paper); }
+  .cortex-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:90px; align-items:center; }
+  #cortex .section-label { color:var(--accent-2); }
+  #cortex .section-label::before { background:var(--accent-2); }
+  #cortex .section-title { color:var(--paper); }
+  #cortex .section-body { color:rgba(240,243,248,0.58); }
+  .cortex-features { margin-top:44px; border-top:1px solid rgba(240,243,248,0.1); }
+  .cortex-feature { padding:22px 0; border-bottom:1px solid rgba(240,243,248,0.08); display:grid; grid-template-columns:22px 1fr; gap:18px; align-items:start; transition:padding-left .3s; cursor:default; }
+  .cortex-feature:hover { padding-left:8px; }
+  .cortex-feature-num { font-family:'DM Mono',monospace; font-size:.58rem; color:var(--accent-2); padding-top:3px; }
+  .cortex-feature-title { font-weight:400; font-size:.92rem; color:var(--paper); margin-bottom:3px; }
+  .cortex-feature-desc { font-size:.82rem; color:rgba(240,243,248,0.48); line-height:1.6; }
+  .cortex-cta { margin-top:36px; }
+  .btn-outline-light { display:inline-flex; align-items:center; gap:10px; padding:14px 36px; border:1px solid rgba(240,243,248,0.3); color:var(--paper); font-family:'DM Mono',monospace; font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; text-decoration:none; transition:all .3s; }
+  .btn-outline-light:hover { background:var(--accent); border-color:var(--accent); }
+
+  /* Cortex Visual */
+  .cortex-visual { position:relative; height:480px; display:flex; align-items:center; justify-content:center; }
+  .cortex-diagram { position:relative; width:370px; height:370px; }
+  .cortex-core { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:118px; height:118px; background:linear-gradient(135deg,var(--accent) 0%,#2563a0 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:2; }
+  .cortex-core-text { font-family:'Cormorant Garamond',serif; font-size:.82rem; font-weight:300; letter-spacing:.14em; color:var(--paper); text-align:center; line-height:1.3; }
+
+  /* APPROACH */
+  #approach { padding:110px 60px; }
+  .approach-header { margin-bottom:72px; }
+  .approach-steps { display:grid; grid-template-columns:repeat(4,1fr); position:relative; }
+  .approach-steps::before { content:''; position:absolute; top:28px; left:0; right:0; height:1px; background:linear-gradient(to right,var(--ink),var(--accent),var(--ink)); }
+  .approach-step { padding:72px 36px 0; position:relative; }
+  .step-dot { position:absolute; top:22px; left:36px; width:11px; height:11px; border:2px solid var(--accent); background:var(--paper); z-index:1; transition:background .3s; }
+  .approach-step:hover .step-dot { background:var(--accent); }
+  .step-num { font-family:'Cormorant Garamond',serif; font-size:3.2rem; font-weight:300; color:var(--mist); line-height:1; margin-bottom:18px; }
+  .step-title { font-family:'Cormorant Garamond',serif; font-size:1.35rem; font-weight:400; margin-bottom:10px; }
+  .step-desc { font-size:.85rem; color:var(--slate); line-height:1.75; }
+
+  /* INDUSTRIES */
+  #industries { padding:110px 60px; background:var(--panel-light); }
+  #industries .section-label { color:var(--accent-2); }
+  #industries .section-label::before { background:var(--accent-2); }
+  #industries .section-title { color:var(--paper); }
+  .industries-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:rgba(255,255,255,0.04); margin-top:56px; }
+  .industry-item { background:var(--panel-light); padding:44px 36px; display:flex; flex-direction:column; gap:14px; border:1px solid transparent; transition:all .35s; }
+  .industry-item:hover { background:rgba(91,155,213,0.08); border-color:rgba(91,155,213,0.2); }
+  .industry-icon { font-size:1.6rem; line-height:1; }
+  .industry-name { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:400; color:var(--paper); }
+  .industry-desc { font-size:.83rem; color:rgba(240,243,248,0.42); line-height:1.7; }
+
+  /* THOUGHT LEADERSHIP */
+  #insights { padding:110px 60px; }
+  .insights-header { margin-bottom:64px; }
+  .insights-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--mist); }
+  .insight-card { background:var(--paper); padding:44px 36px; display:flex; flex-direction:column; gap:16px; text-decoration:none; color:inherit; transition:background .3s; position:relative; overflow:hidden; }
+  .insight-card::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .4s; }
+  .insight-card:hover { background:var(--paper-warm); }
+  .insight-card:hover::after { transform:scaleX(1); }
+  .insight-type { font-family:'DM Mono',monospace; font-size:.52rem; letter-spacing:.25em; text-transform:uppercase; color:var(--accent); }
+  .insight-title { font-family:'Cormorant Garamond',serif; font-size:1.45rem; font-weight:400; line-height:1.25; }
+  .insight-desc { font-size:.86rem; color:var(--slate); line-height:1.72; flex:1; }
+  .insight-meta { display:flex; align-items:center; justify-content:space-between; }
+  .insight-author { font-family:'DM Mono',monospace; font-size:.55rem; letter-spacing:.18em; text-transform:uppercase; color:var(--slate); }
+  .insight-arrow { font-family:'DM Mono',monospace; font-size:.7rem; color:var(--accent); transition:transform .3s; }
+  .insight-card:hover .insight-arrow { transform:translateX(6px); }
+
+  /* CONTACT */
+  #contact { padding:110px 60px; background:var(--paper-warm); }
+  .contact-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:90px; }
+  .contact-info { display:flex; flex-direction:column; gap:44px; }
+  .contact-detail-label { font-family:'DM Mono',monospace; font-size:.58rem; letter-spacing:.25em; text-transform:uppercase; color:var(--accent); margin-bottom:5px; }
+  .contact-detail-value { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:300; color:var(--ink); }
+  .contact-detail-value a { color:var(--ink); text-decoration:none; transition:color .3s; }
+  .contact-detail-value a:hover { color:var(--accent); }
+  .contact-form { display:flex; flex-direction:column; gap:22px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .form-group { display:flex; flex-direction:column; gap:7px; }
+  .form-label { font-family:'DM Mono',monospace; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--slate); }
+  .form-input { padding:13px 16px; background:var(--paper); border:1px solid var(--mist); font-family:'Outfit',sans-serif; font-size:.88rem; font-weight:300; color:var(--ink); outline:none; transition:border-color .3s; width:100%; -webkit-appearance:none; }
+  .form-input:focus { border-color:var(--accent); }
+  .form-input::placeholder { color:rgba(26,34,51,0.3); }
+  textarea.form-input { resize:vertical; min-height:110px; }
+  .form-submit { align-self:flex-start; padding:14px 44px; background:var(--panel); color:var(--paper); border:none; font-family:'DM Mono',monospace; font-size:.68rem; letter-spacing:.25em; text-transform:uppercase; cursor:pointer; transition:all .3s; position:relative; overflow:hidden; }
+  .form-submit::before { content:''; position:absolute; inset:0; background:var(--accent); transform:translateX(-101%); transition:transform .35s; }
+  .form-submit:hover::before { transform:translateX(0); }
+  .form-submit span { position:relative; z-index:1; }
+
+  /* FOOTER */
+  footer { background:var(--ink-deep); padding:56px 60px; display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1; }
+  .footer-copy { font-family:'DM Mono',monospace; font-size:.58rem; letter-spacing:.14em; color:rgba(240,243,248,0.28); text-align:center; }
+  .footer-copy a { color:var(--accent); text-decoration:none; }
+  .footer-links { display:flex; gap:28px; list-style:none; }
+  .footer-links a { font-family:'DM Mono',monospace; font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(240,243,248,0.3); text-decoration:none; transition:color .3s; }
+  .footer-links a:hover { color:var(--accent); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes rotate { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+  @keyframes pulse { 0%,100%{opacity:.55;transform:scale(1)} 50%{opacity:1;transform:scale(1.06)} }
+  .reveal { opacity:0; transform:translateY(28px); transition:opacity .7s,transform .7s; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .reveal-delay-1 { transition-delay:.1s; }
+  .reveal-delay-2 { transition-delay:.2s; }
+  .reveal-delay-3 { transition-delay:.3s; }
+  .reveal-delay-4 { transition-delay:.4s; }
+
+  @media(max-width:900px){
+    nav{padding:18px 28px}
+    .nav-links,.nav-cta{display:none}
+    #hero{padding:110px 28px 56px}
+    .hero-inner{grid-template-columns:1fr;gap:52px}
+    .hero-visual{height:300px}
+    .stats-bar{grid-template-columns:repeat(2,1fr);padding:36px 28px;gap:28px}
+    .stat-item{padding:0 12px;border-right:none;border-bottom:1px solid rgba(240,243,248,0.07);padding-bottom:28px}
+    #services,#cortex,#approach,#industries,#insights,#contact{padding:72px 28px}
+    .services-header,.cortex-inner,.contact-inner,.why-inner{grid-template-columns:1fr;gap:48px}
+    .services-grid,.industries-grid,.insights-grid{grid-template-columns:1fr}
+    .approach-steps{grid-template-columns:repeat(2,1fr)}
+    .approach-steps::before{display:none}
+    footer{flex-direction:column;gap:20px;text-align:center;padding:36px 28px}
+  }
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="logo">
+    <div class="logo-mark">R2<span>DV</span></div>
+    <div class="logo-sub">Data Vision Inc.</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#cortex">Enterprise Cortex</a></li>
+    <li><a href="#approach">Approach</a></li>
+    <li><a href="#insights">Insights</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Start a Conversation</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Intelligent Enterprise Solutions</div>
+      <h1 class="hero-title">Where Data<br>Meets <em>Vision</em></h1>
+      <p class="hero-body">R2 Data Vision delivers cutting-edge Agentic AI, Enterprise Metadata Intelligence, and cloud-native solutions that transform how organizations operate, decide, and evolve.</p>
+      <div class="hero-actions">
+        <a href="#services" class="btn-primary"><span>Explore Services</span></a>
+        <a href="cortex.html" class="btn-ghost">Enterprise Cortex →</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hex-container">
+        <div class="hex-inner">
+          <div class="hex-ring"><div class="hex-dot"></div></div>
+          <div class="hex-ring"><div class="hex-dot"></div></div>
+          <div class="hex-ring"><div class="hex-dot"></div></div>
+          <div class="hex-ring"><div class="hex-dot"></div></div>
+          <div class="hex-center">
+            <div class="hex-center-mark">R2<span>DV</span></div>
+            <div class="hex-center-sub">r2dv.com</div>
+          </div>
+          <div class="data-nodes">
+            <div class="node"><div class="node-dot"></div><div class="node-label">Agentic AI</div></div>
+            <div class="node"><div class="node-dot"></div><div class="node-label">LLM Core</div></div>
+            <div class="node"><div class="node-dot"></div><div class="node-label">Cloud</div></div>
+            <div class="node"><div class="node-dot"></div><div class="node-label">Data Mesh</div></div>
+            <div class="node"><div class="node-dot"></div><div class="node-label">Cortex</div></div>
+            <div class="node"><div class="node-dot"></div><div class="node-label">Orchestration</div></div>
+            <div class="node"><div class="node-dot"></div><div class="node-label">Analytics</div></div>
+            <div class="node"><div class="node-dot"></div><div class="node-label">Security</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item reveal"><div class="stat-num">150<span>+</span></div><div class="stat-label">Enterprise Deployments</div></div>
+  <div class="stat-item reveal reveal-delay-1"><div class="stat-num">98<span>%</span></div><div class="stat-label">Client Retention Rate</div></div>
+  <div class="stat-item reveal reveal-delay-2"><div class="stat-num">85<span>%</span></div><div class="stat-label">Avg. Delivery Acceleration</div></div>
+  <div class="stat-item reveal reveal-delay-3"><div class="stat-num">20<span>+</span></div><div class="stat-label">Years Enterprise Expertise</div></div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="services-header">
+      <div>
+        <div class="section-label reveal">Our Capabilities</div>
+        <h2 class="section-title reveal">Full-spectrum <em>Intelligence</em><br>& Transformation</h2>
+      </div>
+      <p class="section-body reveal" style="max-width:440px">From Agentic AI to cloud architecture and managed services — engineered for the complexity of modern enterprise.</p>
+    </div>
+    <div class="services-grid">
+      <a href="agentic-ai.html" class="service-card reveal">
+        <div class="service-num">01</div>
+        <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+        <div class="service-name">Agentic AI<br>Implementations</div>
+        <div class="service-desc">Design and deploy autonomous AI agents that reason, plan, and execute complex multi-step workflows across enterprise systems — without continuous human intervention.</div>
+        <div class="service-tags"><span class="tag">LLM Agents</span><span class="tag">ReAct</span><span class="tag">Tool Use</span></div>
+        <div class="service-link">Deep Dive →</div>
+      </a>
+      <a href="cortex.html" class="service-card reveal reveal-delay-1">
+        <div class="service-num">02</div>
+        <div class="service-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+        <div class="service-name">Enterprise<br>Metadata LLMs</div>
+        <div class="service-desc">Our Enterprise Cortex platform transforms organizational metadata into a sovereign, queryable intelligence layer — enabling autonomous impact analysis and AI-powered development.</div>
+        <div class="service-tags"><span class="tag">Cortex Engine</span><span class="tag">RAG</span><span class="tag">Graph+Vector</span></div>
+        <div class="service-link">Deep Dive →</div>
+      </a>
+      <a href="agentic-ai.html#orchestration" class="service-card reveal reveal-delay-2">
+        <div class="service-num">03</div>
+        <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+        <div class="service-name">AI Agentic<br>Orchestration</div>
+        <div class="service-desc">Architect multi-agent ecosystems where specialized AI agents collaborate, delegate, and self-coordinate to solve problems across your entire enterprise value chain.</div>
+        <div class="service-tags"><span class="tag">Multi-Agent</span><span class="tag">Workflow AI</span><span class="tag">AutoGen</span></div>
+        <div class="service-link">Deep Dive →</div>
+      </a>
+      <a href="#contact" class="service-card reveal">
+        <div class="service-num">04</div>
+        <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg></div>
+        <div class="service-name">Cloud Architecture<br>& Migration</div>
+        <div class="service-desc">Multi-cloud strategy, architecture design, and seamless migration across AWS, Azure, and GCP — with FinOps optimization and cloud-native modernization built in.</div>
+        <div class="service-tags"><span class="tag">AWS</span><span class="tag">Azure</span><span class="tag">GCP</span></div>
+        <div class="service-link">Inquire →</div>
+      </a>
+      <a href="#contact" class="service-card reveal reveal-delay-1">
+        <div class="service-num">05</div>
+        <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg></div>
+        <div class="service-name">Data Platform<br>& Analytics</div>
+        <div class="service-desc">Build enterprise data platforms, lakehouses, and real-time analytics pipelines that unify siloed data into a governed, AI-ready foundation for your entire organization.</div>
+        <div class="service-tags"><span class="tag">Databricks</span><span class="tag">Snowflake</span><span class="tag">Data Mesh</span></div>
+        <div class="service-link">Inquire →</div>
+      </a>
+      <a href="#contact" class="service-card reveal reveal-delay-2">
+        <div class="service-num">06</div>
+        <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg></div>
+        <div class="service-name">IT Managed<br>Services & Governance</div>
+        <div class="service-desc">End-to-end IT operations management, cybersecurity, compliance frameworks, and technology governance aligned to your business goals and regulatory obligations.</div>
+        <div class="service-tags"><span class="tag">ITSM</span><span class="tag">Compliance</span><span class="tag">SecOps</span></div>
+        <div class="service-link">Inquire →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CORTEX SPOTLIGHT -->
+<section id="cortex">
+  <div class="cortex-inner">
+    <div>
+      <div class="section-label reveal">Flagship Platform</div>
+      <h2 class="section-title reveal">Enterprise <em>Cortex</em> —<br>Your Organization's<br>Intelligence Layer</h2>
+      <p class="section-body reveal">Enterprise Cortex is R2DV's proprietary metadata-native LLM platform — purpose-built to learn from your organization's unique data assets, business processes, and institutional knowledge.</p>
+      <div class="cortex-features reveal">
+        <div class="cortex-feature"><div class="cortex-feature-num">01</div><div><div class="cortex-feature-title">Metadata Ingestion & Semantic Mapping</div><div class="cortex-feature-desc">Autonomous agents crawl code repos, databases, API gateways, and integration platforms to build a continuously updated enterprise knowledge graph.</div></div></div>
+        <div class="cortex-feature"><div class="cortex-feature-num">02</div><div><div class="cortex-feature-title">Graph + Vector Hybrid Knowledge Base</div><div class="cortex-feature-desc">Dual-store architecture combining property graph for structured relationships and vector embeddings for semantic search — answering both structured and natural-language queries.</div></div></div>
+        <div class="cortex-feature"><div class="cortex-feature-num">03</div><div><div class="cortex-feature-title">Agentic Development Engine</div><div class="cortex-feature-desc">AI agents that consume the knowledge base to perform impact analysis, generate enterprise-aware code, and enforce governance policies continuously.</div></div></div>
+        <div class="cortex-feature"><div class="cortex-feature-num">04</div><div><div class="cortex-feature-title">Sovereign Deployment Options</div><div class="cortex-feature-desc">Deploy fully within your Azure boundary or private cloud — zero data egress, private endpoints for all services, full regulatory compliance.</div></div></div>
+        <div class="cortex-feature"><div class="cortex-feature-num">05</div><div><div class="cortex-feature-title">Human-in-the-Loop Supervisory Console</div><div class="cortex-feature-desc">Web-based dashboard for reviewing agent proposals, approving code changes, and managing escalations — humans remain in control.</div></div></div>
+      </div>
+      <div class="cortex-cta reveal"><a href="cortex.html" class="btn-outline-light"><span>Full Architecture Overview →</span></a></div>
+    </div>
+    <div class="cortex-visual reveal">
+      <div class="cortex-diagram">
+        <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 370 370">
+          <line x1="185" y1="185" x2="185" y2="28" stroke="rgba(91,155,213,0.22)" stroke-width="1"/>
+          <line x1="185" y1="185" x2="330" y2="98" stroke="rgba(91,155,213,0.22)" stroke-width="1"/>
+          <line x1="185" y1="185" x2="342" y2="238" stroke="rgba(91,155,213,0.22)" stroke-width="1"/>
+          <line x1="185" y1="185" x2="270" y2="340" stroke="rgba(91,155,213,0.22)" stroke-width="1"/>
+          <line x1="185" y1="185" x2="100" y2="340" stroke="rgba(91,155,213,0.22)" stroke-width="1"/>
+          <line x1="185" y1="185" x2="28" y2="238" stroke="rgba(91,155,213,0.22)" stroke-width="1"/>
+          <line x1="185" y1="185" x2="40" y2="98" stroke="rgba(91,155,213,0.22)" stroke-width="1"/>
+          <circle cx="185" cy="28" r="4" fill="rgba(91,155,213,0.7)"/>
+          <circle cx="330" cy="98" r="4" fill="rgba(91,155,213,0.7)"/>
+          <circle cx="342" cy="238" r="4" fill="rgba(91,155,213,0.7)"/>
+          <circle cx="270" cy="340" r="4" fill="rgba(91,155,213,0.7)"/>
+          <circle cx="100" cy="340" r="4" fill="rgba(91,155,213,0.7)"/>
+          <circle cx="28" cy="238" r="4" fill="rgba(91,155,213,0.7)"/>
+          <circle cx="40" cy="98" r="4" fill="rgba(91,155,213,0.7)"/>
+        </svg>
+        <div style="position:absolute;top:6px;left:50%;transform:translateX(-50%);white-space:nowrap"><div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.14em;color:rgba(126,184,232,0.85);text-transform:uppercase;border:1px solid rgba(91,155,213,0.25);padding:7px 11px;background:rgba(30,45,66,0.8)">Metadata Store</div></div>
+        <div style="position:absolute;top:76px;right:2px"><div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.14em;color:rgba(126,184,232,0.85);text-transform:uppercase;border:1px solid rgba(91,155,213,0.25);padding:7px 11px;white-space:nowrap;background:rgba(30,45,66,0.8)">RAG Pipeline</div></div>
+        <div style="position:absolute;top:218px;right:-2px"><div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.14em;color:rgba(126,184,232,0.85);text-transform:uppercase;border:1px solid rgba(91,155,213,0.25);padding:7px 11px;white-space:nowrap;background:rgba(30,45,66,0.8)">LLM Agents</div></div>
+        <div style="position:absolute;bottom:6px;right:56px"><div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.14em;color:rgba(126,184,232,0.85);text-transform:uppercase;border:1px solid rgba(91,155,213,0.25);padding:7px 11px;white-space:nowrap;background:rgba(30,45,66,0.8)">Connectors</div></div>
+        <div style="position:absolute;bottom:6px;left:56px"><div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.14em;color:rgba(126,184,232,0.85);text-transform:uppercase;border:1px solid rgba(91,155,213,0.25);padding:7px 11px;white-space:nowrap;background:rgba(30,45,66,0.8)">Fine-tuning</div></div>
+        <div style="position:absolute;top:218px;left:-4px"><div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.14em;color:rgba(126,184,232,0.85);text-transform:uppercase;border:1px solid rgba(91,155,213,0.25);padding:7px 11px;white-space:nowrap;background:rgba(30,45,66,0.8)">Governance</div></div>
+        <div style="position:absolute;top:76px;left:2px"><div style="font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.14em;color:rgba(126,184,232,0.85);text-transform:uppercase;border:1px solid rgba(91,155,213,0.25);padding:7px 11px;white-space:nowrap;background:rgba(30,45,66,0.8)">Security</div></div>
+        <div class="cortex-core"><div class="cortex-core-text">Enterprise<br>Cortex™</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section id="approach">
+  <div class="container">
+    <div class="approach-header">
+      <div class="section-label reveal">How We Work</div>
+      <h2 class="section-title reveal">A Rigorous, <em>Proven</em> Methodology</h2>
+    </div>
+    <div class="approach-steps">
+      <div class="approach-step reveal"><div class="step-dot"></div><div class="step-num">01</div><div class="step-title">Discovery & Assessment</div><div class="step-desc">Deep-dive into your current state — data architecture, AI readiness, technology stack — to define a clear transformation roadmap grounded in your strategic objectives.</div></div>
+      <div class="approach-step reveal reveal-delay-1"><div class="step-dot"></div><div class="step-num">02</div><div class="step-title">Architecture & Design</div><div class="step-desc">Co-design the target architecture with your team. Detailed blueprints, proof-of-concept validations, and risk-mitigated implementation plans before a line of code is written.</div></div>
+      <div class="approach-step reveal reveal-delay-2"><div class="step-dot"></div><div class="step-num">03</div><div class="step-title">Build & Deploy</div><div class="step-desc">Agile delivery in iterative sprints — with continuous integration, rigorous testing, and security-by-design embedded at every layer of the solution.</div></div>
+      <div class="approach-step reveal reveal-delay-3"><div class="step-dot"></div><div class="step-num">04</div><div class="step-title">Evolve & Optimize</div><div class="step-desc">Post-deployment, we monitor, tune, and continuously improve — ensuring your AI and data investments compound in value over time with measurable outcomes.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section id="industries">
+  <div class="container">
+    <div class="section-label reveal">Sectors We Serve</div>
+    <h2 class="section-title reveal" style="color:var(--paper)">Trusted Across <em style="color:var(--accent-2)">Critical</em> Industries</h2>
+    <div class="industries-grid">
+      <div class="industry-item reveal"><div class="industry-icon">🏦</div><div class="industry-name">Financial Services</div><div class="industry-desc">Risk modeling, fraud detection, regulatory reporting automation, and AI-powered wealth management platforms.</div></div>
+      <div class="industry-item reveal reveal-delay-1"><div class="industry-icon">🏥</div><div class="industry-name">Healthcare & Life Sciences</div><div class="industry-desc">Clinical data intelligence, HIPAA-compliant AI pipelines, CRO trial management, and population health analytics.</div></div>
+      <div class="industry-item reveal reveal-delay-2"><div class="industry-icon">⚡</div><div class="industry-name">Energy & Utilities</div><div class="industry-desc">Predictive grid management, ESG reporting platforms, and operational AI for exploration and production optimization.</div></div>
+      <div class="industry-item reveal"><div class="industry-icon">🏭</div><div class="industry-name">Manufacturing</div><div class="industry-desc">Predictive maintenance, intelligent demand forecasting, and digital twin implementations for Industry 4.0.</div></div>
+      <div class="industry-item reveal reveal-delay-1"><div class="industry-icon">🛒</div><div class="industry-name">Retail & Consumer</div><div class="industry-desc">Personalization engines, real-time inventory intelligence, and omnichannel data platform modernization.</div></div>
+      <div class="industry-item reveal reveal-delay-2"><div class="industry-icon">🏛️</div><div class="industry-name">Public Sector</div><div class="industry-desc">Secure AI deployments, citizen-service automation, and compliance-first data governance for public institutions.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- THOUGHT LEADERSHIP -->
+<section id="insights">
+  <div class="container">
+    <div class="insights-header">
+      <div class="section-label reveal">Thought Leadership</div>
+      <h2 class="section-title reveal">Ideas That Drive <em>Enterprise</em> Forward</h2>
+      <p class="section-body reveal" style="margin-top:12px;max-width:520px">Deep research and practitioner frameworks from our enterprise architects — published to advance the field and demonstrate how we think.</p>
+    </div>
+    <div class="insights-grid">
+      <a href="agentic-coding.html" class="insight-card reveal">
+        <div class="insight-type">White Paper</div>
+        <div class="insight-title">Enterprise Transformation in the Age of Agentic Coding</div>
+        <div class="insight-desc">A strategic framework for C-Suite and Enterprise Architecture leadership — examining how autonomous AI coding agents restructure enterprise IT economics, delivery models, and workforce roles.</div>
+        <div class="insight-meta"><div class="insight-author">Ravi Rali · Enterprise Architect</div><div class="insight-arrow">→</div></div>
+      </a>
+      <a href="cortex.html" class="insight-card reveal reveal-delay-1">
+        <div class="insight-type">Solution Architecture</div>
+        <div class="insight-title">Enterprise Cortex: Metadata Intelligence & Agentic Development Platform</div>
+        <div class="insight-desc">Full solution architecture for the Enterprise Cortex platform — covering the Harvest Agent Framework, Graph+Vector Knowledge Base, Agentic Development Engine, and governance model.</div>
+        <div class="insight-meta"><div class="insight-author">Ravi Rali · Senior Enterprise Architect</div><div class="insight-arrow">→</div></div>
+      </a>
+      <a href="agentic-ai.html" class="insight-card reveal reveal-delay-2">
+        <div class="insight-type">Capability Brief</div>
+        <div class="insight-title">Agentic AI Orchestration: Building Enterprise-Grade Multi-Agent Systems</div>
+        <div class="insight-desc">How R2DV designs and deploys multi-agent ecosystems — covering orchestration patterns, human-in-the-loop controls, policy enforcement, and industry-specific adoption across CROs, banking, and life sciences.</div>
+        <div class="insight-meta"><div class="insight-author">R2 Data Vision · Practice Lead</div><div class="insight-arrow">→</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div>
+      <div class="section-label reveal">Get In Touch</div>
+      <h2 class="section-title reveal">Let's Build<br>Something <em>Remarkable</em></h2>
+      <p class="section-body reveal" style="margin-bottom:48px">Whether you're exploring AI transformation, seeking a technology partner, or ready to deploy Enterprise Cortex — we'd love to hear from you.</p>
+      <div class="contact-info">
+        <div class="reveal"><div class="contact-detail-label">Website</div><div class="contact-detail-value"><a href="https://www.r2dv.com">www.r2dv.com</a></div></div>
+        <div class="reveal reveal-delay-1"><div class="contact-detail-label">Email</div><div class="contact-detail-value"><a href="mailto:contact@r2dv.com">contact@r2dv.com</a></div></div>
+        <div class="reveal reveal-delay-2"><div class="contact-detail-label">Headquarters</div><div class="contact-detail-value">North America</div></div>
+      </div>
+    </div>
+    <div class="contact-form reveal">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">First Name</label><input type="text" class="form-input" placeholder="Jane"></div>
+        <div class="form-group"><label class="form-label">Last Name</label><input type="text" class="form-input" placeholder="Smith"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Work Email</label><input type="email" class="form-input" placeholder="jane@company.com"></div>
+      <div class="form-group"><label class="form-label">Company</label><input type="text" class="form-input" placeholder="Acme Corp"></div>
+      <div class="form-group"><label class="form-label">Area of Interest</label>
+        <select class="form-input">
+          <option value="" disabled selected>Select a service area</option>
+          <option>Agentic AI Implementation</option>
+          <option>Enterprise Cortex / Metadata LLM</option>
+          <option>AI Agentic Orchestration</option>
+          <option>Cloud Architecture & Migration</option>
+          <option>Data Platform & Analytics</option>
+          <option>IT Managed Services</option>
+          <option>General Inquiry</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" placeholder="Tell us about your initiative or challenge..."></textarea></div>
+      <button class="form-submit" onclick="this.querySelector('span').textContent='Sent ✓';this.style.background='#2a6b45';setTimeout(()=>{this.querySelector('span').textContent='Send Message';this.style.background=''},3000)"><span>Send Message</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">
+    <div class="logo-mark" style="color:var(--paper)">R2<span>DV</span></div>
+    <div class="logo-sub">Data Vision Inc.</div>
+  </div>
+  <div class="footer-copy">© 2025 R2 Data Vision Inc. All rights reserved.<br><a href="https://www.r2dv.com">www.r2dv.com</a> · <a href="mailto:contact@r2dv.com">contact@r2dv.com</a></div>
+  <ul class="footer-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="cortex.html">Cortex</a></li>
+    <li><a href="agentic-coding.html">Insights</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+  const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+  function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);}animRing();
+  document.querySelectorAll('a,button,.service-card,.cortex-feature').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cursor.style.width='14px';cursor.style.height='14px';ring.style.width='52px';ring.style.height='52px';ring.style.opacity='.3';});
+    el.addEventListener('mouseleave',()=>{cursor.style.width='8px';cursor.style.height='8px';ring.style.width='34px';ring.style.height='34px';ring.style.opacity='.45';});
+  });
+  const nav=document.getElementById('nav');
+  window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}}),{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+  document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}}));
+</script>
+</body>
+</html>
